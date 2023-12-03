@@ -19,6 +19,7 @@ async def get_contacts(limit: int = Query(10, le=1000), offset: int = 0, db: Ses
     contacts = await repository_contacts.get_all_contacts(limit, offset, current_user, db)
     return contacts
 
+
 @router.post("/", response_model=ResponseContact, status_code=status.HTTP_201_CREATED, name="Create a new contact",)
 async def create_contact(body: ContactModel, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user),):
     contact = await repository_contacts.create_contact(body, current_user, db)

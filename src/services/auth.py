@@ -9,12 +9,16 @@ from sqlalchemy.orm import Session
 
 from src.database.db import get_db
 from src.repository import users as repository_users
+from src.conf.config import settings
+
 
 
 class Auth:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    SECRET_KEY = "secret_key"
-    ALGORITHM = "HS256"
+    # SECRET_KEY = "secret_key"
+    # ALGORITHM = "HS256"
+    SECRET_KEY = settings.secret_key
+    ALGORITHM = settings.algorithm
     oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
     def verify_password(self, plain_password, hashed_password):
@@ -86,7 +90,7 @@ class Auth:
         token = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
         return token
     
-    
+
     async def get_email_from_token(self, token: str):
         try:
             payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])

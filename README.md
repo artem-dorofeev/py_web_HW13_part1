@@ -128,3 +128,13 @@
 36. src/schemas.py
     class RequestEmail(BaseModel):
         email: EmailStr
+
+37. додаємо пакет:
+    poetry add pydantic-settings
+
+38. вносимо зміни до src/schemas.py
+    model_config = SettingsConfigDict(from_attributes=True)
+
+39. створюємо файли .env та .env_example
+
+40. створюємо файл src/conf/config.py

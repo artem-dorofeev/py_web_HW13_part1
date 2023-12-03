@@ -24,6 +24,7 @@ python-dotenv = "^1.0.0"
 redis = "4.2"
 fastapi-limiter = "^0.1.5"
 cloudinary = "^1.37.0"
+pydantic-settings = "^2.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

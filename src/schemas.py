@@ -1,8 +1,10 @@
 from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime, date
 
+from pydantic_settings import SettingsConfigDict
 
-class ContactModel(BaseModel): # for post (create)
+
+class ContactModel(BaseModel):
 
     name: str = Field(min_length=2, max_length=20)
     surname: str = Field(min_length=2, max_length=20)
@@ -12,7 +14,8 @@ class ContactModel(BaseModel): # for post (create)
     additional: str = Field()
     
 
-class ResponseContact(BaseModel): # for get
+class ResponseContact(BaseModel):
+    model_config = SettingsConfigDict(from_attributes=True)
     id: int = 1
     name: str
     surname: str
@@ -23,8 +26,8 @@ class ResponseContact(BaseModel): # for get
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+    # class Config:
+    #     from_attributes = True
 
 
 class UserModel(BaseModel):
