@@ -77,6 +77,54 @@
 24. Змінюємо маршрути. src/routes/contacts.py
     необхідно додати авторизацію за допомогою методу get_current_user класу Auth. Для кожного маршруту, де необхідна авторизація, потрібно додати параметр за допомогою залежності Depends(auth_service.get_current_user) Параметр current_user: User = Depends(get_current_user) отримує інформацію про поточного користувача з токена доступу access_token, який ми повинні надати разом із запитом до маршруту.
 
+# ДЗ13
 
+25. нам потрібно додати наступні пакети:
+    poetry add fastapi-mail
+    poetry add python-dotenv
+    poetry add redis@4.2
+    poetry add fastapi-limiter
+    poetry add cloudinary
 
+26. Змінюємо моделі та репозиторій​. В модель User необхідно додати поле confirmed = Column(Boolean, default=False)
+    та робимо міграцію:
+        alembic revision --autogenerate -m "upd models user"
+        alembic upgrade heads
 
+27. У репозиторії для роботи з даними користувача src/repository/users.py додамо наступну функцію.
+    async def confirmed_email(email: str, db: Session) -> None:
+        user = await get_user_by_email(email, db)
+        user.confirmed = True
+        db.commit()
+
+28. Сервіс надсилання листів для верифікації. створюємо src/services/email.py змінюємо один рядок !!!! в такий формат MAIL_FROM="a.dorofeev_79@meta.ua"
+
+29. Всередині сервісу Auth реалізуємо метод create_email_token
+    def create_email_token(self, data: dict):
+        to_encode = data.copy()
+        expire = datetime.utcnow() + timedelta(days=7)
+        to_encode.update({"iat": datetime.utcnow(), "exp": expire})
+        token = jwt.encode(to_encode, self.SECRET_KEY, algorithm=self.ALGORITHM)
+        return token
+
+30. Реалізуємо шаблон листа у файлі src/services/templates/email_template.html
+
+31. Змінюємо роботу маршрутів​. Реєстрація користувача​ src/routes/auth.py
+    В обробці маршруту реєстрації користувача "/signup" з’явився новий рядок коду: background_tasks.add_task(send_email, new_user.email, new_user.username, request.base_url)
+
+32. Аутентифікація користувача src/routes/auth.py
+    Ми перевіряємо властивість user.confirmed, і якщо email не підтверджений – генеруємо виняток з описом "Email not confirmed"
+
+33. Підтвердження email src/routes/auth.py
+    Додамо новий маршрут /confirm email/{token} для реалізації підтвердження електронної пошти. 
+
+34. Додамо реалізацію методу auth_service.get_email_from_token в src/services/auth.py
+    додамо в імпорти from jose import JWTError, jwt
+
+35. Повторне надсилання листа src/routes/auth.py 
+        додамо в імпорти from src.schemas import UserModel, UserResponse, TokenModel, RequestEmail
+        @router.post('/request_email')
+
+36. src/schemas.py
+    class RequestEmail(BaseModel):
+        email: EmailStr
