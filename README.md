@@ -1,7 +1,7 @@
-# py_web_HW13_part1
-start HW11, upd to HW12 upd to HW13
+# py_web_HW13_part1 (поетапна реалізація застосунку від дз11 до дз 13)
+# почнемо з ДЗ11
 
-1. poetry add fastapi uvicorn sqlalchemy psycopg2 alembic
+1. poetry add fastapi uvicorn sqlalchemy psycopg2 alembic jinja2
 
 2. створюємо структуру проєкту, db.py - підключення до БД, models.py - моделі, config.ini - дані для підключення
 
@@ -28,9 +28,15 @@ start HW11, upd to HW12 upd to HW13
 
 11. src/repository/contacts.py - методи роботи бази даних із контактами
 
-12. src/database/models.py - заповнення бази(за аналогією з попередніх дз) треба додати poetry add faker
+12. poetry add faker
+    poetry add pydantic@^2.4.2 --extras "email"
 
-13. додаємо static/covers.css templates/index.html
+13. src/database/models.py - заповнення бази(за аналогією з попередніх дз) треба додати poetry add faker
 
-14. запуск сервера:
+14. додаємо static/covers.css templates/index.html
+
+15. запуск сервера:
     uvicorn main:app --reload
+
+# ДЗ12
+16.
