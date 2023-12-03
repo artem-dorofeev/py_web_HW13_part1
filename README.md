@@ -39,4 +39,8 @@
     uvicorn main:app --reload
 
 # ДЗ12
-16.
+
+16. нам потрібно додати наступні пакети:
+    poetry add python-jose["cryptography"]
+    poetry add passlib["bcrypt"]
+    poetry add python-multipart
