@@ -46,5 +46,10 @@
     poetry add python-multipart - (для роботи з файлами у форматі multipart/form-data, який є основним форматом для завантаження файлів по HTTP, необхідний у цьому випадку для правильної роботи FastAPI)
     poetry add libgravatar - (надає функціонал для взаємодії із Gravatar API. Gravatar - це сервіс, який дозволяє користувачам призначати своєму email-адресі глобальний аватар, який використовується на різних веб-сайтах. Libgravatar забезпечує простий спосіб отримання URL-адреси аватара для заданої email-адреси.)
 
-17. 
+17. додаємо в src/database/models.py class User(Base), додаємо в класс контакт:
+        user_id = Column("user_id", ForeignKey("users.id", ondelete="CASCADE"), default=None)
+        user = relationship("User", backref="notes")
+    та робимо міграцію:
+        alembic revision --autogenerate -m "add user"
+        alembic upgrade heads
         
