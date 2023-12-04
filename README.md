@@ -125,16 +125,55 @@
         додамо в імпорти from src.schemas import UserModel, UserResponse, TokenModel, RequestEmail
         @router.post('/request_email')
 
-36. src/schemas.py
+36. Використання Docker Compose
+    docker-compose.yml - з конспекту
+    docker-compose up – запуск служб
+    docker-compose down – зупинити і видалити контейнери
+
+37. src/schemas.py
     class RequestEmail(BaseModel):
         email: EmailStr
 
-37. додаємо пакет:
+38. додаємо пакет:
     poetry add pydantic-settings
 
-38. вносимо зміни до src/schemas.py
+39. вносимо зміни до src/schemas.py
     model_config = SettingsConfigDict(from_attributes=True)
 
-39. створюємо файли .env та .env_example
+40. створюємо файли .env та .env_example
 
-40. створюємо файл src/conf/config.py
+41. створюємо файл src/conf/config.py
+
+42. змінюємо підключення в db.py, змінюємо налаштування в docker-compose.yml
+    в services/auth.py та email.py додаємо from src.conf.config import settings та змінюємо конф.дані за аналогією - MAIL_USERNAME="a.dorofeev_79@meta.ua", на MAIL_USERNAME=settings.mail_username,
+    далі при додавані конф.даних треба це робити чере файл .env 
+
+42. Додаємо обмеження до застосунку main.py:
+    from fastapi_limiter import FastAPILimiter
+    from fastapi_limiter.depends import RateLimiter
+    import redis.asyncio as redis
+    + зміни з конспекту
+
+    А для маршруту встановити обмеження:
+    src/routes/contacts.py
+
+43. Cross-Origin Resource Sharing. main.py
+    from fastapi.middleware.cors import CORSMiddleware
+
+    origins = ["http://localhost:3000", "http://127.0.0.1:5000/"]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],)
+
+44. Збереження файлів у хмарі. додаемо дані підключення в .env та с config.py
+    Розширимо наш клас Settingns новими змінними: src/conf/config.py
+    визначимо новий роутинг /api/users та помістимо його у файл src/routes/users.py
+
+    src/repository/users.py - async def update_avatar
+
+    новий роутинг у файл main.py
+    app.include_router(users.router, prefix='/api')

@@ -17,7 +17,7 @@ Base.metadata.create_all(bind=engine)
 fake = Faker('uk_UA')
 
 # Create 30 fake contacts and insert them into the database
-for _ in range(30):
+for _ in range(40):
     contact = Contact(
         name=fake.first_name(),
         surname=fake.last_name(),
