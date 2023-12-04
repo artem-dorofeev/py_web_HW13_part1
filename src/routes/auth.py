@@ -16,16 +16,6 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 security = HTTPBearer()
 
 
-# @router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-# async def signup(body: UserModel, db: Session = Depends(get_db)):
-#     exist_user = await repository_users.get_user_by_email(body.email, db)
-#     if exist_user:
-#         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Account already exists")
-#     body.password = auth_service.get_password_hash(body.password)
-#     new_user = await repository_users.create_user(body, db)
-#     return {"user": new_user, "detail": "User successfully created"}
-
-
 @router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def signup(body: UserModel, background_tasks: BackgroundTasks, request: Request, db: Session = Depends(get_db)):
     exist_user = await repository_users.get_user_by_email(body.email, db)
@@ -35,24 +25,6 @@ async def signup(body: UserModel, background_tasks: BackgroundTasks, request: Re
     new_user = await repository_users.create_user(body, db)
     background_tasks.add_task(send_email, new_user.email, new_user.username, request.base_url)
     return {"user": new_user, "detail": "User successfully created. Check your email for confirmation."}
-
-
-# @router.post("/login", response_model=TokenModel)
-# async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-#     user = await repository_users.get_user_by_email(body.username, db)  # body.username - email
-#     if user is None:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email")
-#     if not auth_service.verify_password(body.password, user.password):
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
-#     # Generate JWT
-#     access_token = await auth_service.create_access_token(data={"sub": user.email})
-#     refresh_token = await auth_service.create_refresh_token(data={"sub": user.email})
-#     await repository_users.update_token(user, refresh_token, db)
-#     return {
-#         "access_token": access_token,
-#         "refresh_token": refresh_token,
-#         "token_type": "bearer",
-#     }
 
 
 @router.post("/login", response_model=TokenModel)
@@ -107,16 +79,6 @@ async def confirmed_email(token: str, db: Session = Depends(get_db)):
     return {"message": "Email confirmed"}
 
 
-# async def get_email_from_token(self, token: str):
-#   try:
-#       payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
-#       email = payload["sub"]
-#       return email
-#   except JWTError as e:
-#       print(e)
-#       raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-#                           detail="Invalid token for email verification")
-  
 
 @router.post('/request_email')
 async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, request: Request,

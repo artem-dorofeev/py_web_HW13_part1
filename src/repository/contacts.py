@@ -46,44 +46,6 @@ async def get_birthdays_in_next_week(limit: int, offset: int, db: Session):
     return contacts
 
 
-# async def get_contacts_with_birthdays_in_next_7_days(limit: int, offset: int, db: Session):
-#     # Calculate the current date and the date one week from now
-#     today = date.today()
-#     #today = datetime(2001, 12, 26).date() # for testing
-#     next_week = today + timedelta(days=7)
-
-#     # Extract the month and day from the Contact.birthday using SQLAlchemy's extract function
-#     birthday_month = extract('month', Contact.birthday)
-#     birthday_day = extract('day', Contact.birthday)
-
-#     if today.month == next_week.month:
-#         print (64, today.month == next_week.month)
-#         # Filter the contacts based on the month and day
-#         contacts = db.query(Contact).filter(
-#             birthday_month == today.month,
-#             birthday_day >= today.day,
-#             birthday_day <= next_week.day
-#         ).limit(limit).offset(offset)
-#         return contacts
-    
-#     else:
-#         contacts = db.query(Contact).filter(
-#             or_(
-#                 and_(
-#                     birthday_month == today.month,
-#                     today.day <= birthday_day,
-#                     birthday_day <= 31
-#                 ),
-#                 and_(
-#                     birthday_month == next_week.month,
-#                     1 <= birthday_day,
-#                     birthday_day <= next_week.day
-#                 )
-#             )
-#         ).limit(limit).offset(offset)
-#         return contacts
-
-
 async def create_contact(body: ContactModel, db: Session):
     contact = Contact(**body.model_dump())
     db.add(contact)

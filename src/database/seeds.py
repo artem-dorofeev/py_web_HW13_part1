@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from faker import Faker
-# from datetime import date
 
 from models import Base, Contact
 from db import URI
@@ -16,7 +15,7 @@ Base.metadata.create_all(bind=engine)
 
 fake = Faker('uk_UA')
 
-# Create 30 fake contacts and insert them into the database
+# Create 40 fake contacts and insert them into the database
 for _ in range(40):
     contact = Contact(
         name=fake.first_name(),
@@ -30,5 +29,3 @@ for _ in range(40):
     session.add(contact)
 
 session.commit()
-
-# to run the script move to src/database derictory and run: py seeds.py

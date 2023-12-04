@@ -15,8 +15,6 @@ from src.conf.config import settings
 
 class Auth:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    # SECRET_KEY = "secret_key"
-    # ALGORITHM = "HS256"
     SECRET_KEY = settings.secret_key
     ALGORITHM = settings.algorithm
     oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
